@@ -1,0 +1,4 @@
+windows environment
+open terminal => command line terminal => "C:\Users\Zhou&Wan\AppData\Local\Microsoft\WindowsApps\python3.11.exe" -m venv gaoqiang_env
+change to git bash terminal => source gaoqiang_env/Scripts/activate
+
