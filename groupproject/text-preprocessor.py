@@ -130,16 +130,23 @@ class TextPreprocessor:
         # Step 3: Expand contractions
         if self.expand_contractions:
             text = self.__expand_contractions(text)
-        # Step 4: Remove non-ASCII characters (always exec)
-        text = self.__remove_non_ascii(text) 
-        # Step 5: Convert to lowercase (always exec)
-        text = self.__to_lowercase(text)
-        # Step 6: Remove punctuation (always exec)
+
+        ##Tokenization??
+
+
+        # Step 4: Remove punctuation (always exec)
         text = self.__remove_punctuation(text)
+        # Step 5: Remove non-ASCII characters (always exec)
+        text = self.__remove_non_ascii(text) 
+        # Step 6: Convert to lowercase (always exec)
+        text = self.__to_lowercase(text)
         # Step 7: Process numbers
         text = self.number_processor(text)
         # Step 8: Remove stopwords
         text = self.__remove_stopwords(text)
+
+
+        
         # Step 9: Apply stemming
         text = self.stemmer(text)
         # Step 10: Apply lemmatization
@@ -153,6 +160,9 @@ class TextPreprocessor:
     
     def __remove_brackets(self, text):
         return re.sub(r'\[[^]]*\]', '', text)
+        
+    def __expand_contractions(self, text) :
+        return contractions.fix(text)
 
     def __remove_non_ascii(self, words):
         return [ unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8') for word in words]
@@ -162,9 +172,6 @@ class TextPreprocessor:
     
     def __remove_punctuation(self, words):
         return [new_word for new_word in (re.sub(r'[^\w\s]', '', word) for word in words) if new_word]
-    
-    def __expand_contractions(self, text) :
-        return contractions.fix(text)
     
     def __remove_stopwords(self, words) :
         if not self.stop_words:
