@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 import unicodedata
 import contractions
+import inflect
 from enum import Enum
 
 class NumberProcessor(Enum):
@@ -13,6 +14,7 @@ class NumberProcessor(Enum):
 class TextPreprocessHelper:
     def __init__(self):
         self.stop_words = set(stopwords.words('english'))
+        self.inflect_engine = inflect.engine()
     
     """
     Purpose: 
@@ -36,6 +38,12 @@ class TextPreprocessHelper:
     def expand_contractions(self, text):
         return contractions.fix(text)
     
+    def remove_mentions_and_emails(self, text):
+        """Remove @someone and email addresses from text"""
+        text = re.sub(r'@\w+', '', text) # remove @username
+        text = re.sub(r"[^@\s]+@[^@\s]+\.[a-zA-Z]+", '', text) # remove Email address
+        return text
+    
 
     """
     Additional: support remove @someone and email address
@@ -49,42 +57,26 @@ class TextPreprocessHelper:
 
     🚀 Overall Goal: Standardize text for improved NLP performance.
     """
-    def normalize(self, words, mentions_and_emails = True, non_ascii = True, lowercase = True, punctuation = True, stopwords = True, number = NumberProcessor.NoAction):
-        if mentions_and_emails :
-            words = self.__remove_mentions_and_emails(words)
-        if non_ascii : 
-            words = self.__remove_non_ascii(words)
-        if lowercase:
-            words = self.__to_lowercase(words)
-        if punctuation :
-            words = self.__remove_punctuation(words)
-        if stopwords :
-            words = self.__remove_stopwords(words)
-        if number == NumberProcessor.ToString :
-            words = self.__replace_numbers(words)
-        elif number == NumberProcessor.Remove : 
-            words = self.__remove_numbers(words)
 
-        return words
-    
-    def __remove_mentions_and_emails(self, words):
-        """Remove @someone and email address"""
-        return [word for word in words if not word.startswith('@') and not re.match(r"[^@\s]+@[^@\s]+\.[a-zA-Z]+", word)]
-
-    def __remove_non_ascii(self, words):
+    def remove_non_ascii(self, words):
         return [unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8') for word in words]
-    
-    def __to_lowercase(words):
-        return [word.lower() for word in words]
 
-    def __remove_punctuation(self, words):
+    def remove_punctuation(self, words):
         return [re.sub(r'[^\w\s]', '', word) for word in words if word]
 
-    def __remove_stopwords(self, words):
-        return [word for word in words if word not in self.stop_words]
+    # def replace_numbers(self, words):
+        # return [self.inflect_engine.number_to_words(word) if word.isdigit() else word for word in words]
 
-    def __replace_numbers(self, words):
-        return [self.inflect_engine.number_to_words(word) if word.isdigit() else word for word in words]
+    def replace_numbers(self, words):
+        new_words = []
+        for word in words:
+            if word.isdigit():  # 只处理纯数字
+                try:
+                    word = self.inflect_engine.number_to_words(word)
+                except:
+                    pass  # 如果转换失败，就跳过
+            new_words.append(word)
+        return new_words
 
-    def __remove_numbers(self, words):
+    def remove_numbers(self, words):
         return [word for word in words if not re.fullmatch(r"\d+(\.\d+)?", word)]
