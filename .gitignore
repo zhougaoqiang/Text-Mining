@@ -13,3 +13,7 @@ wk5/wk5-mnn-chapter_3/data/yelp/reviews_with_splits_full.csv
 wk5/wk5-mnn-chapter_3/data/yelp/reviews_with_splits_lite.csv
 wk2/wk2-text-preprocessing-classification/__pycache__/textpreprocess.cpython-312.pyc
 /labassignment-1/data
+groupproject/__pycache__/textpreprocesshelper.cpython-311.pyc
+groupproject/data/noemoticon.csv
+groupproject/data/noemoticon_with_header.csv
+groupproject/data/sentiment-analysis-data.zip
