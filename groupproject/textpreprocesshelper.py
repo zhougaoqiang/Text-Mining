@@ -44,19 +44,8 @@ class TextPreprocessHelper:
         text = re.sub(r"[^@\s]+@[^@\s]+\.[a-zA-Z]+", '', text) # remove Email address
         return text
     
-
-    """
-    Additional: support remove @someone and email address
-    Purpose: improve generalization, dimensionality reduction
-    ✅ Improve text consistency
-    ✅ Enhance model robustness
-    ✅ Reduce noise in data
-    ✅ Optimize feature extraction
-    ✅ Improve computational efficiency
-    ✅ Facilitate better text clustering & classification
-
-    🚀 Overall Goal: Standardize text for improved NLP performance.
-    """
+    def remove_non_ascii_in_text(self, text):
+        return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
 
     def remove_non_ascii(self, words):
         return [unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8') for word in words]
