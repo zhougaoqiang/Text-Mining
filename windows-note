@@ -2,3 +2,14 @@ windows environment
 open terminal => command line terminal => "C:\Users\Zhou&Wan\AppData\Local\Microsoft\WindowsApps\python3.11.exe" -m venv gaoqiang_env
 change to git bash terminal => source gaoqiang_env/Scripts/activate
 
+
+
+
+Test Accuracy: 85.64
+
+remove_special_char: Test Accuracy: 83.89
+CASE FOLDING   85.35
+REMOVE PUNCTUATION  83.79
+EXPAND CONTRACTIONS 85.84
+REMOVE STOP WORDS 81.93
+WORDNET LEMMATIZER 85.94
